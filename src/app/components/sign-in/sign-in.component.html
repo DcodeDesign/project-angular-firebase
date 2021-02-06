@@ -1,1 +1,32 @@
-<p>sign-in works!</p>
+<div class="main">
+  <mat-card>
+    <mat-card-header>
+      <h3>Sign In</h3>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Username</mat-label>
+        <input type="text" class="formControl" placeholder="Username" #userName required matInput>
+        <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Password</mat-label>
+        <input type="password" class="formControl" placeholder="Password" #userPassword required matInput>
+      </mat-form-field>
+      <button mat-raised-button class="btn-margin" (click)="authService.SignIn(userName.value, userPassword.value)" color="primary">Login</button>
+
+      <button mat-raised-button class="btn-margin" type="button" (click)="authService.GoogleAuth()" color="secondary" >
+        Log in with Google
+      </button>
+      <button class="btn-half" routerLink="/forgot-password" color="primary" mat-button>Forgot Password?</button>
+      <button class="redirect btn-half" routerLink="/register-user" color="primary" mat-button> Sign Up</button>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+
+
+
+
+

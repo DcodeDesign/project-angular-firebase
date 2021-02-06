@@ -1,9 +1,11 @@
-import {Injectable, NgZone} from '@angular/core';
-import {User} from './User';
-import auth from 'firebase/app';
-import {AngularFireAuth} from '@angular/fire/auth';
-import {AngularFirestore, AngularFirestoreDocument} from '@angular/fire/firestore';
-import {Router} from '@angular/router';
+import { Injectable, NgZone } from '@angular/core';
+import { User } from './user';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
+
+import firebase from 'firebase';
+import auth = firebase.auth;
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +13,15 @@ import {Router} from '@angular/router';
 
 export class AuthService {
   userData: any; // Save logged in user data
-
   constructor(
     public afs: AngularFirestore,   // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
     public ngZone: NgZone // NgZone service to remove outside scope warning
   ) {
+    const provider = new auth.GoogleAuthProvider();
+    /* Saving user data in localstorage when
+    logged in and setting up null when logged out */
     this.afAuth.authState.subscribe(user => {
       if (user) {
         this.userData = user;
@@ -30,8 +34,9 @@ export class AuthService {
     });
   }
 
-  public SignIn(email, password): void {
-    return this.afAuth.auth.signInWithEmailAndPassword(email, password)
+  // Sign in with email/password
+  async SignIn(email, password): Promise<void> {
+    return await this.afAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
         this.ngZone.run(() => {
           this.router.navigate(['dashboard']);
@@ -43,9 +48,11 @@ export class AuthService {
   }
 
   // Sign up with email/password
-  public SignUp(email, password): void {
-    return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+  async SignUp(email, password): Promise<void> {
+    return await this.afAuth.createUserWithEmailAndPassword(email, password)
       .then((result) => {
+        /* Call the SendVerificaitonMail() function when new user sign
+        up and returns promise */
         this.SendVerificationMail();
         this.SetUserData(result.user);
       }).catch((error) => {
@@ -54,16 +61,16 @@ export class AuthService {
   }
 
   // Send email verfificaiton when new user sign up
-  public SendVerificationMail(): void {
-    return this.afAuth.auth.currentUser.sendEmailVerification()
+  async SendVerificationMail(): Promise<void> {
+    return (await this.afAuth.currentUser).sendEmailVerification()
       .then(() => {
         this.router.navigate(['verify-email-address']);
       });
   }
 
   // Reset Forggot password
-  public ForgotPassword(passwordResetEmail): void {
-    return this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail)
+  async ForgotPassword(passwordResetEmail): Promise<void> {
+    return await this.afAuth.sendPasswordResetEmail(passwordResetEmail)
       .then(() => {
         window.alert('Password reset email sent, check your inbox.');
       }).catch((error) => {
@@ -78,13 +85,13 @@ export class AuthService {
   }
 
   // Sign in with Google
-  public GoogleAuth(): void {
-    return this.AuthLogin(new auth.GoogleAuthProvider());
+  async GoogleAuth(): Promise<void> {
+    return await this.AuthLogin(new auth.GoogleAuthProvider());
   }
 
   // Auth logic to run auth providers
-  public AuthLogin(provider): void {
-    return this.afAuth.auth.signInWithPopup(provider)
+  async AuthLogin(provider): Promise<void> {
+    return await this.afAuth.signInWithPopup(provider)
       .then((result) => {
         this.ngZone.run(() => {
           this.router.navigate(['dashboard']);
@@ -95,7 +102,10 @@ export class AuthService {
       });
   }
 
-  public SetUserData(user): void {
+  /* Setting up user data when sign in with username/password,
+  sign up with username/password and sign in with social auth
+  provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
+  SetUserData(user): Promise<void> {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
     const userData: User = {
       uid: user.uid,
@@ -110,10 +120,11 @@ export class AuthService {
   }
 
   // Sign out
-  public SignOut(): void {
-    return this.afAuth.auth.signOut().then(() => {
+  SignOut(): Promise<void> {
+    return this.afAuth.signOut().then(() => {
       localStorage.removeItem('user');
       this.router.navigate(['sign-in']);
     });
   }
+
 }

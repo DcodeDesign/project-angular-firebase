@@ -5,6 +5,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+// Reactive Form
+import { ReactiveFormsModule } from '@angular/forms';
+
 // Angular Material Components
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
@@ -52,6 +55,9 @@ import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 
+// Auth service
+import { AuthService } from './shared/services/auth.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -98,8 +104,9 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
+    ReactiveFormsModule
   ],
-  providers: [BrowserAnimationsModule],
+  providers: [BrowserAnimationsModule, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
