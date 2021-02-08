@@ -40,7 +40,8 @@ import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 
-// Firebase services + enviorment module
+// Firebase services + environment module
+// https://bezkoder.com/angular-10-firebase-crud/
 // https://www.positronx.io/full-angular-7-firebase-authentication-system/
 // https://github.com/SinghDigamber/angularfirebase-authentication
 import { AngularFireModule } from '@angular/fire';
@@ -104,9 +105,10 @@ import { AuthService } from './shared/services/auth.service';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule
   ],
-  providers: [BrowserAnimationsModule, AuthService],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

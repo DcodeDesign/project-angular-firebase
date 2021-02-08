@@ -1,44 +1,24 @@
-<div class="displayTable">
-  <div class="displayTableCell">
-
-    <div class="px-logo">
-      <a href="https://www.positronx.io" target="_blank">
-        <img src="https://www.positronx.io/wp-content/themes/positronx/img/logo-positronx-white.svg" alt="positronX.io - Learn Full Stack Development">
-      </a>
-    </div>
-
-    <div class="authBlock">
+<div class="main">
+  <mat-card>
+    <mat-card-header>
       <h3>Sign Up</h3>
-
-      <div class="formGroup">
-        <input type="email" class="formControl" placeholder="Email Address" #userEmail required>
-      </div>
-
-      <div class="formGroup">
-        <input type="password" class="formControl" placeholder="Password" #userPwd required>
-      </div>
-
-      <div class="formGroup">
-        <input type="button" class="btn btnPrimary" value="Sign Up" (click)="authService.SignUp(userEmail.value, userPwd.value)">
-      </div>
-
-      <div class="formGroup">
-        <span class="or"><span class="orInner">Or</span></span>
-      </div>
-
-      <!-- Continue with Google -->
-      <div class="formGroup">
-        <button type="button" class="btn googleBtn" (click)="authService.GoogleAuth()">
-          <i class="fab fa-google-plus-g"></i>
-          Continue with Google
-        </button>
-      </div>
-      
-    </div>
-
-    <div class="redirectToLogin">
-      <span>Already have an account? <span class="redirect" routerLink="/sign-in">Log In</span></span>
-    </div>
-  </div>
-
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Username</mat-label>
+        <input type="text" #userEmail matInput required>
+        <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Password</mat-label>
+        <input type="password" #userPwd  matInput required>
+      </mat-form-field>
+      <button mat-raised-button class="btn-margin" color="primary" value="Sign Up" (click)="authService.SignUp(userEmail.value, userPwd.value)" >Sign Up</button>
+      <button mat-raised-button class="btn-margin" type="button" (click)="authService.GoogleAuth()" color="secondary">
+        Log in with Google
+      </button>
+      <button class="redirect btn-half" routerLink="/sign-in" color="primary" mat-button>Already have an account ?</button>
+    </mat-card-content>
+  </mat-card>
 </div>
+

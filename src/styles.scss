@@ -2,3 +2,37 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.main{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // background-image: ;
+
+  mat-card {
+    width: 280px;
+  }
+
+  button {
+    width:100%;
+
+    .full-width{
+      width:100%;
+    }
+  }
+
+  .btn-margin{
+    margin:0 0 15px 0;
+  }
+
+  .btn-half{
+    width:50%;
+  }
+
+  mat-form-field {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+}
